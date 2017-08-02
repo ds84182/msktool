@@ -1,0 +1,14 @@
+name: msk_util
+description: A starting point for Dart libraries or applications.
+version: 0.0.1
+#homepage: https://www.example.com
+#author: Dwayne Slater <email@example.com>
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
+
+dependencies:
+  file: ^2.3.2
+
+dev_dependencies:
+  test: ^0.12.0
