@@ -24,3 +24,6 @@ psd_to_html/out/
 .pub/
 add.png
 out
+
+test/
+tool/
