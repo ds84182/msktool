@@ -1,7 +1,7 @@
 library msk.pf.src.context;
 
 import 'dart:async';
-import 'package:file/chroot.dart';
+import 'package:path/path.dart' as p;
 import 'package:file/file.dart';
 import 'package:charcode/ascii.dart';
 
@@ -9,20 +9,26 @@ import 'reader_writer.dart';
 import 'id.dart';
 
 class PFContext {
-  final ChrootFileSystem fs;
+  final Directory dir;
   PFHeader header;
 
   PFContext(Directory dir)
-      : fs = new ChrootFileSystem(dir.fileSystem, dir.path);
+      : dir = dir;
+
+  String forceRelative(String path) =>
+      p.isAbsolute(path) ? p.relative(path, from: p.rootPrefix(path)) : path;
+
+  File file(String path) => dir.childFile(forceRelative(path));
+  Directory directory(String path) => dir.childDirectory(forceRelative(path));
 
   Future open([String filename = "PFStatic.idx"]) async {
-    final raf = await fs.file(filename).open();
+    final raf = await file(filename).open();
     header = await readPF(raf);
     await raf.close();
   }
 
   Future save([String filename = "PFStaticNew.idx"]) async {
-    final raf = await fs.file(filename).open(mode: FileMode.WRITE);
+    final raf = await file(filename).open(mode: FileMode.WRITE);
     await writePF(header, raf);
     await raf.close();
   }
@@ -50,7 +56,7 @@ class PFContext {
   }
 
   File findFile(PFPackageHeader packageHeader) {
-    return fs.file(
+    return file(
         "${packageHeader.packagePath}/${packageHeader.packageName}.package");
   }
 
