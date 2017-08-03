@@ -1,0 +1,3 @@
+[submodule "LuaVM"]
+	path = LuaVM
+	url = https://github.com/ds84182/LuaVM.git
