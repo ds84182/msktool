@@ -33,6 +33,9 @@ end)
 
 local EvalClient = {}
 
+-- Prevent garbage collector from collecting EvalClient when ui_world_2d stops running
+rawset(_G, "EvalClient", EvalClient)
+
 function EvalClient:Init()
   EA:LuaOutput("EVAL", "Initializing EvalClient")
 
@@ -41,6 +44,7 @@ function EvalClient:Init()
     evalBuffer = "", -- String reference to the eval buffer, which is modified by Eval Server to contain Lua Bytecode
     requestedEvalBufferSize = 0, -- The requested size of the eval buffer, if the current buffer isn't big enough.
     evalServerConnected = false, -- Eval Server flips this to true when its connected to Eval Client
+    evalServerConnectionAck = false, -- Eval Client flips this to true when it sees that Eval Server is connected.
     requestEval = false, -- Eval Server flips this to true when it wants the evalBuffer to be evaluated
     evalResult = nil, -- Evaluation result, Eval Server reads this
   }
@@ -57,6 +61,8 @@ function EvalClient:Init()
 
   self._COMM = _COMM
 
+  self.jobs = {}
+
   self:InstallYieldOverload()
 end
 
@@ -66,24 +72,37 @@ function EvalClient:InstallYieldOverload()
   -- We want to install a frame callback in ui_world_2d
   local OldYield = Yield
   rawset(_G, "Yield", function()
-    OldYield()
-
-    local uiWorld = Universe:GetWorld("ui_world_2d")
-
-    if uiWorld and not self.job then
-      EA:LuaOutput("EVAL", "Found UI World 2D, installing frame callback.")
-
-      self.job = Classes.Job_PerFrameFunctionCallback:Spawn(function()
-        if self.yieldOverloadInstalled then
-          self:UninstallYieldOverload(OldYield)
-        end
-        self:RunFrame()
-      end, "EvalClientJob", uiWorld)
-
-      self.job:ExecuteAsIs()
+    self:RunFrame()
+    if self:StartFrameJob("ui_world_2d") then
+      --if self.yieldOverloadInstalled then
+      --  self:UninstallYieldOverload(OldYield)
+      --end
     end
+    OldYield()
   end)
   self.yieldOverloadInstalled = true
+end
+
+function EvalClient:StartFrameJob(world)
+  if not self.jobs[world] then
+    local worldObj = Universe:GetWorld(world)
+
+    if worldObj then
+      EA:LuaOutput("EVAL", "Found "..world..", installing frame callback.")
+
+      local job = Classes.Job_PerFrameFunctionCallback:Spawn(function()
+        self:RunFrame()
+      end, "EvalClientJob", worldObj)
+
+      job:ExecuteAsIs()
+
+      self.jobs[world] = job
+
+      return true, job
+    end
+  end
+
+  return false, self.jobs[world]
 end
 
 function EvalClient:UninstallYieldOverload(OldYield)
@@ -101,6 +120,7 @@ function EvalClient:RunFrame()
     if not self.connected then
       EA:LuaOutput("EVAL", "Eval Server connected!")
       self.connected = true
+      _COMM.evalServerConnectionAck = true
     end
 
     if _COMM.requestedEvalBufferSize > #_COMM.evalBuffer then
