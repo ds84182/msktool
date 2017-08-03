@@ -7,14 +7,8 @@ library msktool.bin;
 
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
-import 'package:msktool/command/attr.dart';
-import 'package:msktool/command/base.dart';
-import 'package:msktool/command/shell.dart';
+import 'package:msktool/command.dart';
 import 'package:path/path.dart' as p;
-import 'package:msktool/command/compile.dart';
-import 'package:msktool/command/pf.dart';
-import 'package:msktool/command/reload.dart';
 
 main(List<String> args) async {
 //  final context = new PFContext(const LocalFileSystem().currentDirectory);
@@ -73,18 +67,4 @@ String minimizePath(String path) {
   } else {
     return ".../${split.last}";
   }
-}
-
-CommandRunner makeCommandRunner({bool interactiveMode}) {
-  final commandRunner = new MSKCommandRunner("msktool", "Tools to handle files from My Sims Kingdom.");
-  commandRunner
-    ..addCommand(new AttrCommand())
-    ..addCommand(new PFCommand())
-    ..addCommand(new CompileCommand());
-  if (interactiveMode) {
-    commandRunner
-      ..addCommand(new ReloadCommand())
-      ..addCommand(new ShellCommand());
-  }
-  return commandRunner;
 }
