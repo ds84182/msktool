@@ -1,4 +1,4 @@
--- Eval Client - Compiled to Lua Bytecode, retargeted to PowerPC, and run as GameplayLoad in My Sims Kingdom
+-- Eval Client - Compiled to Lua Bytecode, retargeted to PowerPC, and run as Common in My Sims Kingdom
 
 -- We place strings in Lua's memory that are found by Eval Server.
 -- Eval Server then modifies the strings to relay messages to us.
@@ -10,6 +10,8 @@
 
 -- For back and forth communication, we set up a table that gets modified by Eval Server.
 -- Since table objects leak their address, we can set up a string buffer that contains the table's address.
+
+-- eval_server/init.lua contains the implementation of the Eval Server.
 
 -- Enable logging
 

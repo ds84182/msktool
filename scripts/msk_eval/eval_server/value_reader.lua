@@ -1,4 +1,8 @@
 -- Reads values from Lua into Lua because... Lua.
+-- Simple values are read directly into the Lua equivalent.
+-- This includes nil, boolean, lightuserdata, number, and string.
+-- More complex values like table, function, userdata, and thread, are read as GCObject addresses.
+-- There are special methods to handle these complex values.
 
 local ffi = require "ffi"
 local bit = require "bit"
@@ -99,6 +103,7 @@ struct Table : CommonHeader {                                     [offset:  6, s
 };
 ]]
 
+-- Do some code generation to make getter/setter functions from dolphin.memory functions.
 local function makeGS(offset, rwfunc)
   return assert(loadstring([=[
 return function(address, value)
@@ -110,6 +115,7 @@ end
 end]=]))()
 end
 
+-- Do some code generation to make a function that always returns an offset to the given address.
 local function makeO(offset)
   return loadstring("return function(address) return address + "..offset.." end")()
 end
@@ -129,7 +135,8 @@ local F32 = {
 }
 
 if not dolphin.memory.readF32 then
-  -- patch it!
+  -- Earlier versions of dolphin.lua did not have the ability to read F32s.
+  -- Patch it!
   local cast = ffi.typeof "union { uint32_t i; float f; }"
   local readU32, writeU32 = dolphin.memory.readU32, dolphin.memory.writeU32
   function dolphin.memory.readF32(address)
@@ -144,6 +151,8 @@ if not dolphin.memory.readF32 then
   end
 end
 
+------------------------------------------------------------------------------
+-- Struct read/write functions:                                             --
 ------------------------------------------------------------------------------
 
 local value = {

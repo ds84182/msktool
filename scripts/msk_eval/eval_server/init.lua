@@ -1,10 +1,15 @@
 if not dolphin then error("This script must be running inside of Dolphin to work!") end
 
--- To use the eval server, type: require "msk_eval.eval_server.init" into the Dolphin console
+-- Eval Server depends on Dolphin+LuaJIT.
+-- github.com/ds84182/dolphin/tree/luajit
+
+-- To use the eval server, type: require "msk_eval.eval_server.init" into the Dolphin console (if Dolphin's workdir is here)
+-- Otherwise, type: package.path = package.path..[[;<PATH_TO_MSKTOOL>\scripts\?\init.lua;<PATH_TO_MSKTOOL>\scripts\?.lua]] require "msk_eval.eval_server"
 
 dolphin.log("Starting Eval Server")
 
 -- Patch MSK::phonyprint to call luaB_print
+-- This allows print statements from the game to get output in Dolphin's log via OSREPORT.
 dolphin.memory.writeU32(0x8031f6b0, 0x4be2b4f0)
 dolphin.memory.invalidateICache(0x8031f6b0, 8, true)
 
