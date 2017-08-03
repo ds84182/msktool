@@ -66,6 +66,6 @@ class PFPatchCommand extends PFSubCommand {
     final fileIdString = fileId.toRadixString(36);
     final filename = ".$fileIdString-temp.idx";
     await context.save(filename);
-    await context.fs.file(filename).rename("PFStatic.idx");
+    await context.file(filename).rename("PFStatic.idx");
   }
 }
