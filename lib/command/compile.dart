@@ -2,6 +2,7 @@ library msktool.command.compile;
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 import 'package:args/command_runner.dart';
 import 'package:msktool/command/base.dart';
 import 'package:path/path.dart' as p;
@@ -26,11 +27,11 @@ class CompileCommand extends MSKCommand {
       final name = p.basenameWithoutExtension(path);
       final directory = p.dirname(path);
 
-      final result = await Process.run("luac", [
+      final result = await Process.run("luac5.1", [
         '-o',
         p.join(directory, '$name-native.luac'),
         path,
-      ]);
+      ], runInShell: true);
 
       if (result.exitCode != 0) {
         printError("An error occurred when compiling '$inputPath' to native code:\n"
@@ -63,11 +64,18 @@ class CompileCommand extends MSKCommand {
       final name = p.basenameWithoutExtension(path);
       final directory = p.dirname(path);
 
+      final luaVmPath = p.join(
+          p.fromUri(
+              await Isolate.resolvePackageUri(Uri.parse("package:msktool/"))
+          ),
+          '../LuaVM',
+      );
+
       final result = await Process.run("lua5.3", [
         'convert_bytecode.lua',
         p.join(directory, '$name-native.luac'),
         '@v51ebi04s04o04f04',
-      ], workingDirectory: p.canonicalize("/home/dwayne/luavmgit/LuaVM"));
+      ], workingDirectory: luaVmPath, runInShell: true);
 
       if (result.exitCode != 0) {
         printError("An error occurred while retargeting $inputPath to PPC:\n"
