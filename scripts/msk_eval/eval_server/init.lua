@@ -6,6 +6,8 @@ if not dolphin then error("This script must be running inside of Dolphin to work
 -- To use the eval server, type: require "msk_eval.eval_server.init" into the Dolphin console (if Dolphin's workdir is here)
 -- Otherwise, type: package.path = package.path..[[;<PATH_TO_MSKTOOL>\scripts\?\init.lua;<PATH_TO_MSKTOOL>\scripts\?.lua]] require "msk_eval.eval_server"
 
+-- MSKTOOL = os.getenv("MSKTOOL") package.path = package.path..";"..MSKTOOL.."/scripts/?/init.lua;"..MSKTOOL.."/scripts/?.lua" require "msk_eval.eval_server"
+
 dolphin.log("Starting Eval Server")
 
 -- Patch MSK::phonyprint to call luaB_print
@@ -89,11 +91,6 @@ function eval_server.onFrame_WaitAck()
       dolphin.log("Eval server connection acknowledged!")
 
       eval_server.onFrame = eval_server.onFrame_GrabResults
-
-      -- Send Common.luac over and execute it
-      -- Otherwise the game refuses to run (lots of scripts will error)
-      dolphin.log("Sending over Common...")
-      evalBC(eval_server.mskevalRoot.."/Common.luac")
     end
   end
 end
@@ -174,6 +171,42 @@ function cheats.unlockAll()
     for _, collection in ipairs(Luattrib:GetAllCollections("unlock")) do
       Unlocks:Unlock(collection[1], collection[2])
     end
+
+    for _, collection in ipairs(Luattrib:GetAllCollections("island")) do
+      Unlocks:Unlock(collection[1], collection[2])
+    end
+
+    for _, collection in ipairs(Luattrib:GetAllCollections("lock")) do
+      Unlocks:Unlock(collection[1], collection[2])
+    end
+  ]]
+end
+
+function cheats.teleport(island)
+  eval([[
+    local startingWorld = Universe:GetIslandStartingWorld("island", "]]..island..[[")
+    Universe:RequestGameplayWorldChange(startingWorld)
+    Classes.Job_Teleport:Spawn(Universe:GetPlayerGameObject(), startingWorld):ExecuteAsIs()
+  ]])
+end
+
+cheats.tutorial = {}
+
+function cheats.tutorial.disable()
+  eval [[
+    DebugMenu:SetValue("EnableTutorial", false)
+  ]]
+end
+
+function cheats.tutorial.enableAllAbilities()
+  eval [[
+    local controller = Tutorial:GetTutorialController()
+    controller:EnableCodeInteractionCancelation()
+    controller:EnableEnterConstruction(true)
+    controller:EnableCamera()
+    controller:EnableAllControl()
+    controller:EnablePainting()
+    controller:EnableProspecting()
   ]]
 end
 
