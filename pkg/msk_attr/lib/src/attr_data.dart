@@ -19,10 +19,23 @@ enum AttrFlag {
 
 /// Describes the type and size of an [AttrField].
 class AttrType {
-  int id;
-  int size;
+  final int id;
+  final int size;
 
-  AttrType({this.id, this.size});
+  const AttrType.raw(this.id, this.size);
+
+  @override
+  String toString() => "AttrType("
+      "${id.toRadixString(16).padLeft(8, '0')}, "
+      "$size"
+      ")";
+
+  @override
+  int get hashCode => (size << 1) ^ id;
+
+  @override
+  bool operator ==(other) =>
+      other is AttrType && other.id == id && other.size == size;
 }
 
 /// Describes a piece of data defined for an [AttrClass].
@@ -64,5 +77,6 @@ class AttrCollectionField {
   ByteData data;
   dynamic decodedData;
 
-  AttrCollectionField({this.id, this.inlineData, this.staticDataLength, this.data});
+  AttrCollectionField(
+      {this.id, this.inlineData, this.staticDataLength, this.data});
 }

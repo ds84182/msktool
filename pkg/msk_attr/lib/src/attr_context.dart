@@ -103,12 +103,8 @@ class AttrTypeManager {
   }
 
   AttrType lookupOrCreateType(int id, int size) {
-    final type = _types.putIfAbsent(
-        id,
-        () => new AttrType(
-              id: id,
-              size: size,
-            ));
+    // TODO: Reuse types from known_types.dart
+    final type = _types.putIfAbsent(id, () => new AttrType.raw(id, size));
 
     if (type.size != size) {
       throw "Sizes aren't equal, given: $size already have: ${type.size}";

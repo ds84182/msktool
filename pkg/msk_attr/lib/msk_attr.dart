@@ -15,3 +15,4 @@ export 'src/context_helper.dart';
 export 'src/attr_id_hash.dart' show attrId, attrIdArrayIndex;
 export 'src/field_data.dart';
 export 'src/msk_attr_base.dart';
+export 'src/known_types.dart';

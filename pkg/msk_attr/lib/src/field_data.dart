@@ -52,6 +52,12 @@ class ClassKey extends Key {
     return context.lookupClass(key);
   }
 
+  AttrField lookupField(int id) => context.lookupClassField(key, id);
+
+  Iterable<AttrField> lookupFields() {
+    return context.lookupClassFields(key);
+  }
+
   Iterable<AttrCollection> lookupCollections() =>
       context.lookupCollections(key);
 }
@@ -122,4 +128,108 @@ class RefSpec {
       (context.lookupName(classKey) ?? _hex(classKey)) +
       ":" +
       (context.lookupName(collectionKey) ?? _hex(collectionKey));
+}
+
+class BlockCost {
+  final AttrContext context;
+  final int blockCollectionKey;
+  final int cost;
+
+  BlockCost(this.context, this.blockCollectionKey, this.cost);
+
+  CollectionKey get block => new CollectionKey(context, blockCollectionKey);
+
+  @override
+  int get hashCode => blockCollectionKey ^ (cost << 1);
+
+  @override
+  bool operator ==(other) {
+    if (other is BlockCost) {
+      return other.context == context &&
+          other.blockCollectionKey == blockCollectionKey &&
+          other.cost == cost;
+    }
+
+    return false;
+  }
+
+  @override
+  String toString() => "BlockCost($block, $cost)";
+}
+
+enum Interest {
+  cute,
+  fun,
+  nature,
+  spooky,
+  tech,
+  elegant,
+  chair,
+  food,
+  domestic,
+  sculpture,
+  paint,
+  bonusAll,
+  bonusLimited,
+}
+
+const interestNames = const <Interest, String>{
+  Interest.cute: "Cute",
+  Interest.fun: "Fun",
+  Interest.nature: "Nature",
+  Interest.spooky: "Spooky",
+  Interest.tech: "Tech",
+  Interest.elegant: "Elegant",
+  Interest.chair: "Chair",
+  Interest.food: "Food",
+  Interest.domestic: "Domestic",
+  Interest.sculpture: "Sculpture",
+  Interest.paint: "Paint",
+  Interest.bonusAll: "BonusAll",
+  Interest.bonusLimited: "BonusLimited",
+};
+
+const interestIndices = const <Interest, int>{
+  Interest.cute: 0,
+  Interest.fun: 1,
+  Interest.nature: 2,
+  Interest.spooky: 3,
+  Interest.tech: 4,
+  Interest.elegant: 5,
+  Interest.chair: 6,
+  Interest.food: 7,
+  Interest.domestic: 8,
+  Interest.sculpture: 9,
+  Interest.paint: 10,
+  Interest.bonusAll: 30,
+  Interest.bonusLimited: 31,
+};
+
+Interest interestByIndex(int index) {
+  if (index >= 0 && index <= 10) {
+    return Interest.values[index];
+  } else if (index == 30 || index == 31) {
+    return Interest.values[index-30];
+  } else {
+    return null;
+  }
+}
+
+class InterestScore {
+  final Interest interest;
+  final int score;
+
+  const InterestScore(this.interest, this.score);
+
+  @override
+  int get hashCode => interest.index ^ (score << 5);
+
+  @override
+  bool operator ==(other) =>
+      other is InterestScore &&
+      other.interest == interest &&
+      other.score == score;
+
+  @override
+  String toString() => "InterestScore(${interestNames[interest]}, $score)";
 }
