@@ -1,0 +1,19 @@
+Magic: LLMF
+LightSetData Package Entry ID at 0x08
+
+Min X and Min Z (float32) of AABB at 0x20
+Number of level models (uint32) at 0x28
+Number of "entries" ? (uint32) at 0x2C
+AABB (float32) at 0x30?
+Level Model Package IDs (uint64[Number of level models]) at 0x48
+Entries (after Level Models)...
+
+Entry:
+Offsets are relative to entry start
+
+Model Package ID (uint64) at 0x00
+X, Y, Z (float32) at 0x08
+Rx, Ry, Rz (float32) at 0x14
+Sx, Sy, Sz (float32) at 0x20
+Material Count at 0x2C
+Materials are uint64_t[2], so uint64_t[2]*Material Count entries follow

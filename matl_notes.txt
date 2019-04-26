@@ -1,0 +1,13 @@
+Known parameter names:
+MapEntry(diffuseColor: 7fee2d1a)
+MapEntry(useLights: 76f88689)
+MapEntry(highlightMultiplier: 2616b09a)
+MapEntry(diffuseMap: 6cc0fd85)
+MapEntry(ambientMap: 20cb22b7)
+MapEntry(specularMap: ad528a60)
+MapEntry(diffuseMap: 6cc0fd85)
+MapEntry(diffuseColor: 7fee2d1a)
+MapEntry(ambientMap: 20cb22b7)
+MapEntry(shadowReceiver: f46b90ae)
+MapEntry(diffuseMap: 6cc0fd85)
+MapEntry(blendmode: b2649c2f)

@@ -1,0 +1,45 @@
+Magic: RMDL
+Version: 00 00 01 01
+BOM: 7F 7F FF FF (x24)
+Model Count: u32
+Pointer to model pointers
+Padding: 12 bytes
+Pointer to matrix info
+
+Model header:
+Model ID?: u32
+Pointer to display list
+Vertex data attribute count: u32
+Pointer to vertex data
+MaterialData package entry
+Unknown: u32 (Always 01D0E75D?)
+Unknown: u32 (Always 0?)
+Bounding box (Min XYZ, Max XYZ): f32[6]
+Unknown: u32
+Unknown: u32 (Always 0?)
+Unknown: u32 (Always 2CA33BDB? "none" when passed through FNV-1)
+
+Vertex data header:
+Vertex attribute data entries...
+
+Vertex attribute data entry:
+Vertex attribute array type: u8 (GX_VA_POS and friends)
+Vertex attribute type: u8 ($ & 0b111 is component size, $ >> 3 is component type)
+Padding? always zero: u16
+Pointer to attribute data: u32
+
+Matrix info:
+Pointer to matrix header
+
+Matrix header:
+Number of 4*4 matrix entries: u32
+Pointer to unknown data
+Pointer to start of matrix data (f32[4][4] * num matrix entries)
+
+Pointers inside Pig:
+00000034: 000043C0
+00000060: 000000E0
+00000068: 000020E0
+000000AC: 00003D78
+000000B0: 000043A0
+000000B4: 000043C8
