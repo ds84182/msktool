@@ -1,7 +1,6 @@
 library msktool.buildregion_manasum;
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:file/local.dart';
 import 'package:msk_attr/msk_attr.dart';

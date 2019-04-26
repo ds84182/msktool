@@ -2,6 +2,7 @@ library hkxread.src.classes.hk_base_object;
 
 import 'package:hkxread/src/parser.dart';
 import 'package:hkxread/src/serializable.dart';
+import 'package:meta/meta.dart';
 
 // Size: 4 bytes
 class HkBaseObject extends Serializable {
@@ -10,6 +11,7 @@ class HkBaseObject extends Serializable {
   }
 
   @override
+  @mustCallSuper
   void read(DataStream data, ObjectReader reader) {
     skipVTable(data);
   }

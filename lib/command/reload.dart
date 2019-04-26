@@ -1,10 +1,9 @@
 library msktool.command.reload;
 
-import 'dart:async';
 import 'dart:developer';
-import 'package:args/command_runner.dart';
+import 'dart:isolate';
 import 'package:msktool/command/base.dart';
-import 'package:vm_service_client/vm_service_client.dart';
+import 'package:vm_service_lib/vm_service_lib_io.dart';
 
 class ReloadCommand extends MSKCommand {
   @override
@@ -16,19 +15,15 @@ class ReloadCommand extends MSKCommand {
   @override
   execute() async {
     final service = await Service.controlWebServer(enable: true);
-    final client = new VMServiceClient.connect(service.serverUri);
-    final vm = await client.getVM();
-    final VMRunnableIsolate isolate = await new Stream.fromIterable(vm.isolates)
-        .asyncMap((ref) => ref.loadRunnable())
-        .firstWhere((ref) => ref.rootLibrary.name == "msktool.bin");
-    final report = await isolate.reloadSources();
+    final client = await vmServiceConnectUri(service.serverUri.toString());
+    final report = await client.reloadSources(Service.getIsolateID(Isolate.current));
 
-    if (report.status) {
+    if (report.success) {
       printInfo("Done.");
     } else {
-      printError(report.status);
+      printError(report.json);
     }
 
-    await client.close();
+    client.dispose();
   }
 }

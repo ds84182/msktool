@@ -5,10 +5,14 @@ import 'dart:core' as core show bool;
 import 'package:msk_attr/src/attr_data.dart';
 import 'package:msk_attr/src/field_data.dart';
 
+typedef TypeExtractor<R> = R Function<T>();
+
 class AttrTypeInfo<T> extends AttrType {
   final String name;
 
   const AttrTypeInfo(int id, int size, this.name) : super.raw(id, size);
+
+  R extractType<R>(TypeExtractor<R> extractor) => extractor<T>();
 
   @override
   String toString() => name;
@@ -60,8 +64,7 @@ class Attrib {
       const AttrTypeInfo<RefSpec>(0x65833771, 8, "$_prefix.RefSpec");
   static const collectionKey = const AttrTypeInfo<CollectionKey>(
       0x67F6372A, 4, "$_prefix.CollectionKey");
-  // TODO: Vector4
-  static const floatColor = const AttrTypeInfo<List<double>>(
+  static const floatColor = const AttrTypeInfo<FloatColor>(
       0x7E839EE8, 16, "$_prefixTypes.FloatColour");
 
   static const types = const [vector3, refSpec, collectionKey, floatColor];
@@ -76,9 +79,9 @@ class MySims {
       0x4455CAA1, 8, "$_prefix.InterestScore");
   // TODO: Actual types for these:
   static const assetSpec =
-      const AttrTypeInfo<String>(0xD7CEB540, 8, "$_prefix.AssetSpec");
+      const AttrTypeInfo<AssetSpec>(0xD7CEB540, 8, "$_prefix.AssetSpec");
   static const uiTexture =
-      const AttrTypeInfo<String>(0xB39B07A2, 8, "$_prefix.UITexture");
+      const AttrTypeInfo<UITexture>(0xB39B07A2, 8, "$_prefix.UITexture");
   static const halString =
       const AttrTypeInfo<String>(0xEC86BE65, 4, "$_prefix.HALString");
   static const fishingSpawnItemInfo =
@@ -94,4 +97,17 @@ class MySims {
     fishingSpawnItemInfo,
     blockCost,
   ];
+}
+
+const _allTypes = const [
+  EAReflection.types,
+  Attrib.types,
+  MySims.types,
+];
+
+AttrTypeInfo lookupTypeInfo(int id) {
+  return _allTypes.expand((x) => x).firstWhere(
+        (t) => t.id == id,
+        orElse: () => null,
+      );
 }

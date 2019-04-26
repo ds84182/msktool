@@ -1,7 +1,7 @@
 library hkxread.src.parser;
 
 import 'dart:typed_data';
-import 'dart:convert' show ASCII;
+import 'dart:convert' show ascii;
 import 'package:hkxread/src/data_stream/byte_data.dart';
 import 'package:meta/meta.dart';
 
@@ -85,7 +85,7 @@ class DataStreamUtils {
   static String convertZeroTerminatedString(Uint8List bytes) {
     int zeroIndex = bytes.indexOf(0);
     if (zeroIndex == -1) zeroIndex = bytes.length;
-    return ASCII.decoder.convert(bytes, 0, zeroIndex);
+    return ascii.decoder.convert(bytes, 0, zeroIndex);
   }
 }
 

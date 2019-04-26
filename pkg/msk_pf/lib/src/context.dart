@@ -28,7 +28,7 @@ class PFContext {
   }
 
   Future save([String filename = "PFStaticNew.idx"]) async {
-    final raf = await file(filename).open(mode: FileMode.WRITE);
+    final raf = await file(filename).open(mode: FileMode.write);
     await writePF(header, raf);
     await raf.close();
   }
@@ -83,7 +83,7 @@ class PFContext {
     }
 
     final file = findFile(entry.package.packageHeader);
-    final raf = await file.open(mode: FileMode.WRITE_ONLY_APPEND);
+    final raf = await file.open(mode: FileMode.writeOnlyAppend);
 
     final offset = await raf.length();
     await raf.setPosition(offset);

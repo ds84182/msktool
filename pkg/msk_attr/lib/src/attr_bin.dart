@@ -201,8 +201,9 @@ Future readAttrBin(AttrContext context, RandomAccessFile file) async {
       tohex(data).map(indent(4)).forEach(print);
     }
 
+    collection.preallocateFields(fieldData.length);
     fieldData.forEach((fieldData) {
-      collection.fields.add(new AttrCollectionField(
+      collection.addField(new AttrCollectionField(
         id: fieldData.id,
         inlineData: fieldData.data,
         staticDataLength: collectionHeader.staticBlobSize,
@@ -295,6 +296,8 @@ Future readAttrBin(AttrContext context, RandomAccessFile file) async {
       });
     });
   }
+
+  context.finalize();
 }
 
 String intToHex(int value, [int length = 4]) =>

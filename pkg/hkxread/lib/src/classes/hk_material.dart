@@ -1,6 +1,5 @@
 library hkxread.src.classes.hk_material;
 
-import 'package:collection/collection.dart';
 import 'package:hkxread/src/parser.dart';
 import 'package:hkxread/src/serializable.dart';
 

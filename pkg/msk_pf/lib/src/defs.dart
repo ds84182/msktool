@@ -27,8 +27,10 @@ const Map<int, String> kTypeDefs = const {
   0x5BCA8C06: "AptData",
 };
 
-final Map<int, String> kFileDefs =
-    new Map<int, String>.fromIterable(kKnownFilenames, key: (String x) => computeId(x.codeUnits));
+final Map<int, String> kFileDefs = new Map<int, String>.fromIterable(
+  kKnownFilenames,
+  key: (x) => computeId((x as String).codeUnits),
+);
 
 const List<String> kKnownFilenames = const [
 // Extracted from ELF

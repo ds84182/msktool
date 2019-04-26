@@ -75,20 +75,20 @@ class WavefrontModels {
     const <double>[
       0.0, 0.0, -1.0, //
       0.0, 1.0, -1.0, //
-      math.SQRT1_2, 0.0, -math.SQRT1_2, //
-      math.SQRT1_2, 1.0, -math.SQRT1_2, //
+      math.sqrt1_2, 0.0, -math.sqrt1_2, //
+      math.sqrt1_2, 1.0, -math.sqrt1_2, //
       1.0, 0.0, 0.0, //
       1.0, 1.0, 0.0, //
-      math.SQRT1_2, 0.0, math.SQRT1_2, //
-      math.SQRT1_2, 1.0, math.SQRT1_2, //
+      math.sqrt1_2, 0.0, math.sqrt1_2, //
+      math.sqrt1_2, 1.0, math.sqrt1_2, //
       -0.0, 0.0, 1.0, //
       -0.0, 1.0, 1.0, //
-      -math.SQRT1_2, 0.0, math.SQRT1_2, //
-      -math.SQRT1_2, 1.0, math.SQRT1_2, //
+      -math.sqrt1_2, 0.0, math.sqrt1_2, //
+      -math.sqrt1_2, 1.0, math.sqrt1_2, //
       -1.0, 0.0, -0.0, //
       -1.0, 1.0, -0.0, //
-      -math.SQRT1_2, 0.0, -math.SQRT1_2, //
-      -math.SQRT1_2, 1.0, -math.SQRT1_2, //
+      -math.sqrt1_2, 0.0, -math.sqrt1_2, //
+      -math.sqrt1_2, 1.0, -math.sqrt1_2, //
     ],
     const <int>[
       2, 3, 1, //

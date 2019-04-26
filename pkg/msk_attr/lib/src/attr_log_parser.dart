@@ -54,7 +54,7 @@ class AttrParser {
 
       final c = new AttrClass(
         id: parsed.value[0][1],
-        flags: new Set.from((parsed.value[1] as List<String>).map(_stringToFlag)),
+        flags: new Set.from((parsed.value[1] as List).cast<String>().map(_stringToFlag)),
       );
 
       classMap[c.id] = c;
@@ -92,7 +92,7 @@ class AttrParser {
           parsed.value[1][1],
           parsed.value[3],
         ),
-        flags: new Set.from((parsed.value[2] as List<String>).map(_stringToFlag)),
+        flags: new Set.from((parsed.value[2] as List).cast<String>().map(_stringToFlag)),
       );
 
       lines.moveNext();
@@ -117,7 +117,7 @@ class AttrParser {
       final c = new AttrCollection(
         id: parsed.value[1][1],
         classId: classId,
-        flags: new Set.from((parsed.value[2] as List<String>).map(_stringToFlag)),
+        flags: new Set.from((parsed.value[2] as List).cast<String>().map(_stringToFlag)),
       );
 
       collectionMap
@@ -152,7 +152,7 @@ class AttrParser {
       }
     } while (true);
 
-    collectionMap.forEach(context.addCollectionsToClass);
+//    collectionMap.forEach(context.addCollectionsToClass);
   }
 }
 

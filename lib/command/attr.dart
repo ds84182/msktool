@@ -6,6 +6,7 @@ import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:msk_attr/msk_attr.dart';
 import 'package:msktool/command/attr/list.dart';
+import 'package:msktool/command/attr/query.dart';
 import 'package:msktool/command/base.dart';
 import 'package:path/path.dart' as p;
 
@@ -25,6 +26,7 @@ class AttrCommand extends MSKCommand {
 
   AttrCommand() {
     addSubcommand(new AttrListCommand());
+    addSubcommand(new AttrQueryCommand());
 
     argParser.addOption(
       "root",
@@ -37,7 +39,7 @@ class AttrCommand extends MSKCommand {
         "suffix",
         abbr: 's',
         help: "Suffix of the accessed attribute database.",
-        defaultsTo: "z"
+        defaultsTo: ""
     );
   }
 }

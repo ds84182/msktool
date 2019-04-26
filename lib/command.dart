@@ -1,6 +1,5 @@
 library msktool.command;
 
-import 'dart:async';
 import 'package:args/command_runner.dart';
 import 'package:msktool/command/attr.dart';
 import 'package:msktool/command/base.dart';

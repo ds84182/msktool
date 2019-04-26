@@ -64,9 +64,51 @@ class AttrCollection {
   int id;
   int parent;
   Set<AttrFlag> flags;
-  List<AttrCollectionField> fields = [];
+  List<AttrCollectionField> _fields = <AttrCollectionField>[];
+  Map<int, AttrCollectionField> _fieldMap = <int, AttrCollectionField>{};
+  Iterable<AttrCollectionField> get fields => _fields;
+  int _nextFieldIndex = 0;
+  Uint32List _fieldIds;
 
   AttrCollection({this.classId, this.id, this.parent, this.flags});
+
+  void preallocateFields(int count) {
+    _fields..length = count;
+    _fieldIds = new Uint32List(count);
+  }
+
+  void addField(AttrCollectionField field) {
+    _fields[_nextFieldIndex] = field;
+    _fieldIds[_nextFieldIndex++] = field.id;
+    _fieldMap[field.id] = field;
+  }
+
+  AttrCollectionField lookupField(int id) {
+    // _fieldMap[id];
+    /*int field;
+    final int length = _nextFieldIndex;
+    for (int i=0; i<length; i++) {
+      field = _fieldIds[i];
+      if (field == id) {
+        return _fields[i];
+      } else if (field > id) {
+        return null;
+      }
+    }*/
+    int min = 0;
+    int max = _nextFieldIndex;
+    while (min < max) {
+      int mid = min + ((max - min) >> 1);
+      int element = _fieldIds[mid];
+      if (element == id) return _fields[mid];
+      if (element < id) {
+        min = mid + 1;
+      } else {
+        max = mid;
+      }
+    }
+    return null;
+  }
 }
 
 /// A field in an [AttrCollection].

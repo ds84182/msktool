@@ -1,6 +1,5 @@
 library hkxread.src.classes.hk_collidable;
 
-import 'package:collection/collection.dart';
 import 'package:hkxread/src/classes/hk_cd_body.dart';
 import 'package:hkxread/src/classes/hk_typed_broad_phase_handle.dart';
 import 'package:hkxread/src/parser.dart';

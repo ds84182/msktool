@@ -2,7 +2,6 @@ library msktool.command.shell;
 
 import 'dart:io';
 
-import 'package:args/command_runner.dart';
 import 'package:msktool/command/base.dart';
 
 class ShellCommand extends MSKCommand {

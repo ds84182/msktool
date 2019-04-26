@@ -1,7 +1,6 @@
 library hkxread.src.classes.hk_physics_system;
 
 import 'package:hkxread/src/classes/hk_array.dart';
-import 'package:hkxread/src/classes/hk_base_object.dart';
 import 'package:hkxread/src/classes/hk_object_ptr.dart';
 import 'package:hkxread/src/classes/hk_referenced_object.dart';
 import 'package:hkxread/src/classes/hk_rigid_body.dart';

@@ -21,6 +21,21 @@ class PFExtractCommand extends PFSubCommand {
   String get path => argResults.rest.length >= 1 ? argResults.rest[0] : null;
   String get target => argResults.rest.length >= 2 ? argResults.rest[1] : null;
 
+  Future extractEntry(PFContext context, PFEntry entry, String target) async {
+    const fs = const LocalFileSystem();
+
+    final targetType = await fs.type(target);
+    File targetFile;
+
+    if (targetType == FileSystemEntityType.directory) {
+      targetFile = fs.directory(target).childFile(entry.name);
+    } else {
+      targetFile = fs.file(target);
+    }
+
+    await context.readEntry(entry).pipe(targetFile.openWrite());
+  }
+
   @override
   Future execute() async {
     var path = this.path;
@@ -52,25 +67,18 @@ class PFExtractCommand extends PFSubCommand {
       return;
     }
 
-    if (data is! PFEntry) {
-      print(" ! Object at path `$path` is not an entry!");
+    if (data is PFEntry) {
+      await extractEntry(context, data, target);
+    } else {
+      for (final data in PFContext.listFrom(data)) {
+        // TODO: Recurse into other data types
+        if (data is PFEntry) {
+          printInfo(data.name);
+          await extractEntry(context, data, pathContext.join(target, data.name));
+        }
+      }
       return;
     }
-
-    PFEntry entry = data;
-
-    const fs = const LocalFileSystem();
-
-    final targetType = await fs.type(target);
-    File targetFile;
-
-    if (targetType == FileSystemEntityType.DIRECTORY) {
-      targetFile = fs.directory(target).childFile(entry.name);
-    } else {
-      targetFile = fs.file(target);
-    }
-
-    await context.readEntry(entry).pipe(targetFile.openWrite());
 
     print("Done");
   }

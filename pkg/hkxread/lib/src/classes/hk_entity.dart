@@ -1,12 +1,7 @@
 library hkxread.src.classes.hk_entity;
 
-import 'package:hkxread/src/classes/hk_array.dart';
-import 'package:hkxread/src/classes/hk_base_object.dart';
-import 'package:hkxread/src/classes/hk_collidable.dart';
 import 'package:hkxread/src/classes/hk_material.dart';
 import 'package:hkxread/src/classes/hk_motion.dart';
-import 'package:hkxread/src/classes/hk_property.dart';
-import 'package:hkxread/src/classes/hk_referenced_object.dart';
 import 'package:hkxread/src/classes/hk_world_object.dart';
 import 'package:hkxread/src/parser.dart';
 import 'package:hkxread/src/serializable.dart';

@@ -209,7 +209,7 @@ Interest interestByIndex(int index) {
   if (index >= 0 && index <= 10) {
     return Interest.values[index];
   } else if (index == 30 || index == 31) {
-    return Interest.values[index-30];
+    return Interest.values[index - 30];
   } else {
     return null;
   }
@@ -232,4 +232,52 @@ class InterestScore {
 
   @override
   String toString() => "InterestScore(${interestNames[interest]}, $score)";
+}
+
+class AssetSpec {
+  final int id;
+  const AssetSpec(this.id);
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(other) => other is AssetSpec && other.id == id;
+
+  @override
+  String toString() =>
+      "AssetSpec(${_hex((id >> 32).toUnsigned(32))}${_hex(id.toUnsigned(32))})";
+}
+
+class UITexture extends AssetSpec {
+  const UITexture(int id) : super(id);
+
+  @override
+  String toString() =>
+      "UITexture(${_hex((id >> 32).toUnsigned(32))}${_hex(id.toUnsigned(32))})";
+}
+
+class FloatColor {
+  final double r, g, b, a;
+  const FloatColor(this.a, this.r, this.g, this.b);
+
+  int get r255 => (r * 255.0).round();
+  int get g255 => (g * 255.0).round();
+  int get b255 => (b * 255.0).round();
+  int get a255 => (a * 255.0).round();
+
+  @override
+  int get hashCode =>
+      r.hashCode ^ (g.hashCode << 1) ^ (b.hashCode << 3) ^ (a.hashCode << 5);
+
+  @override
+  bool operator ==(other) =>
+      other is FloatColor &&
+      other.r == r &&
+      other.g == g &&
+      other.b == b &&
+      other.a == a;
+
+  @override
+  String toString() => "FloatColor($r, $g, $b, $a)";
 }

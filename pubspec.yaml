@@ -5,12 +5,12 @@ version: 0.0.1
 #author: Dwayne Slater <email@example.com>
 
 environment:
-  sdk: '>=1.20.1 <2.0.0'
+  sdk: '>=2.0.0 <3.0.0'
 
 dependencies:
-  args: ^0.13.7
+  args: ^1.0.0
   path: ^1.4.1
-  file: ^2.3.2
+  file: ^5.0.6
   msk_attr:
     path: pkg/msk_attr
   msk_pf:
@@ -21,10 +21,7 @@ dependencies:
     path: pkg/msk_tex
   pool:
   isolate:
-  vm_service_client:
-      git:
-        url: git://github.com/BlackHC/vm_service_client.git
-        ref: reload_sources_poc
+  vm_service_lib:
 
 #dev_dependencies:
 #  test: ^0.12.0

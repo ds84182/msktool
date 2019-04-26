@@ -42,8 +42,7 @@ main(List<String> args) async {
           print(interactiveStackTrace);
         } if (args.length >= 1 && args.first == "restart") {
           print("Restarting interactive mode...");
-          await main(["interactive"]);
-          return;
+          return main(["interactive"]);
         } else {
           await makeCommandRunner(interactiveMode: true).run(args);
         }
@@ -55,7 +54,7 @@ main(List<String> args) async {
       }
     }
   } else {
-    await makeCommandRunner(interactiveMode: false).run(args);
+    return makeCommandRunner(interactiveMode: false).run(args);
   }
 }
 

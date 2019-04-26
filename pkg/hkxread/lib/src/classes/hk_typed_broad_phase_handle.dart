@@ -1,6 +1,5 @@
 library hkxread.src.classes.hk_typed_broad_phase_handle;
 
-import 'package:collection/collection.dart';
 import 'package:hkxread/src/classes/hk_broad_phase_handle.dart';
 import 'package:hkxread/src/parser.dart';
 import 'package:hkxread/src/serializable.dart';

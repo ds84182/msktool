@@ -36,6 +36,7 @@ class PFFileSystem extends FileSystem {
   @override
   File file(path) {
     // TODO: implement file
+    throw UnimplementedError();
   }
 
   @override
@@ -76,7 +77,7 @@ class PFFileSystem extends FileSystem {
   FileSystemEntityType typeSync(String inPath, {bool followLinks: true}) {
     final split = path.split(path.canonicalize(getPath(inPath)));
     final level = split.length > 4 ? PFFSLevel.invalid : PFFSLevel.list[split.length-1];
-    return level.isFile ? FileSystemEntityType.FILE : FileSystemEntityType.DIRECTORY;
+    return level.isFile ? FileSystemEntityType.file : FileSystemEntityType.directory;
   }
 }
 
@@ -171,7 +172,7 @@ abstract class PFFSEntity<T extends FileSystemEntity> extends FileSystemEntity {
   Uri get uri => new Uri(scheme: "pf", path: path);
 
   @override
-  Stream<FileSystemEvent> watch({int events: FileSystemEvent.ALL, bool recursive: false}) {
+  Stream<FileSystemEvent> watch({int events: FileSystemEvent.all, bool recursive: false}) {
     throw invalidArgument(path);
   }
 }
@@ -341,11 +342,13 @@ class PFFSFile extends PFFSEntity<PFFSFile> implements File {
   @override
   Future<bool> exists() {
     // TODO: implement exists
+    throw UnimplementedError();
   }
 
   @override
   bool existsSync() {
     // TODO: implement existsSync
+    throw UnimplementedError();
   }
 
   @override
@@ -371,61 +374,73 @@ class PFFSFile extends PFFSEntity<PFFSFile> implements File {
   @override
   Future<int> length() {
     // TODO: implement length
+    throw UnimplementedError();
   }
 
   @override
   int lengthSync() {
     // TODO: implement lengthSync
+    throw UnimplementedError();
   }
 
   @override
-  Future<RandomAccessFile> open({FileMode mode: FileMode.READ}) {
+  Future<RandomAccessFile> open({FileMode mode: FileMode.read}) {
     // TODO: implement open
+    throw UnimplementedError();
   }
 
   @override
   Stream<List<int>> openRead([int start, int end]) {
     // TODO: implement openRead
+    throw UnimplementedError();
   }
 
   @override
-  RandomAccessFile openSync({FileMode mode: FileMode.READ}) {
+  RandomAccessFile openSync({FileMode mode: FileMode.read}) {
     // TODO: implement openSync
+    throw UnimplementedError();
   }
 
   @override
-  IOSink openWrite({FileMode mode: FileMode.WRITE, Encoding encoding: UTF8}) {
+  IOSink openWrite({FileMode mode: FileMode.write, Encoding encoding: utf8}) {
     // TODO: implement openWrite
+    throw UnimplementedError();
   }
 
   @override
   Future<List<int>> readAsBytes() {
     // TODO: implement readAsBytes
+    throw UnimplementedError();
   }
 
   @override
   List<int> readAsBytesSync() {
     // TODO: implement readAsBytesSync
+    throw UnimplementedError();
   }
 
   @override
-  Future<List<String>> readAsLines({Encoding encoding: UTF8}) {
+  Future<List<String>> readAsLines({Encoding encoding: utf8}) {
     // TODO: implement readAsLines
+    throw UnimplementedError();
   }
 
   @override
-  List<String> readAsLinesSync({Encoding encoding: UTF8}) {
+  List<String> readAsLinesSync({Encoding encoding: utf8}) {
     // TODO: implement readAsLinesSync
+    throw UnimplementedError();
   }
 
   @override
-  Future<String> readAsString({Encoding encoding: UTF8}) {
+  Future<String> readAsString({Encoding encoding: utf8}) {
     // TODO: implement readAsString
+    throw UnimplementedError();
   }
 
   @override
-  String readAsStringSync({Encoding encoding: UTF8}) {
+  String readAsStringSync({Encoding encoding: utf8}) {
     // TODO: implement readAsStringSync
+    throw UnimplementedError();
   }
 
   @override
@@ -451,30 +466,32 @@ class PFFSFile extends PFFSEntity<PFFSFile> implements File {
   @override
   Future<FileStat> stat() {
     // TODO: implement stat
+    throw UnimplementedError();
   }
 
   @override
   FileStat statSync() {
     // TODO: implement statSync
+    throw UnimplementedError();
   }
 
   @override
-  Future<File> writeAsBytes(List<int> bytes, {FileMode mode: FileMode.WRITE, bool flush: false}) {
+  Future<File> writeAsBytes(List<int> bytes, {FileMode mode: FileMode.write, bool flush: false}) {
     throw _rofs(path);
   }
 
   @override
-  void writeAsBytesSync(List<int> bytes, {FileMode mode: FileMode.WRITE, bool flush: false}) {
+  void writeAsBytesSync(List<int> bytes, {FileMode mode: FileMode.write, bool flush: false}) {
     throw _rofs(path);
   }
 
   @override
-  Future<File> writeAsString(String contents, {FileMode mode: FileMode.WRITE, Encoding encoding: UTF8, bool flush: false}) {
+  Future<File> writeAsString(String contents, {FileMode mode: FileMode.write, Encoding encoding: utf8, bool flush: false}) {
     throw _rofs(path);
   }
 
   @override
-  void writeAsStringSync(String contents, {FileMode mode: FileMode.WRITE, Encoding encoding: UTF8, bool flush: false}) {
+  void writeAsStringSync(String contents, {FileMode mode: FileMode.write, Encoding encoding: utf8, bool flush: false}) {
     throw _rofs(path);
   }
 }

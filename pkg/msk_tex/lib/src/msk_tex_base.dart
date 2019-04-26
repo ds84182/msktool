@@ -29,6 +29,8 @@ abstract class TextureFormat {
         return const I4TextureFormat();
       case 0x01:
         return const I8TextureFormat();
+      case 0x06:
+        return const RGBA8TextureFormat();
       case 0x0E:
         return const CMPRTextureFormat();
       default:
@@ -78,6 +80,64 @@ class I8TextureFormat extends TextureFormat {
   }
 }
 
+class RGBA8TextureFormat extends TextureFormat {
+  const RGBA8TextureFormat() : super(index: 0x06, name: "RGBA8", blockSize: 32);
+
+  @override
+  Uint32List decode(Uint8List data, int width, int height) {
+    final pixelCount = width * height;
+    final pixels = new Uint32List(pixelCount);
+
+    const kBlockDim = 4;
+    const kBlockBPP = 2;
+    const kBlockBytes = (kBlockDim * kBlockDim) * kBlockBPP;
+    // kBlockBytes == 32 == cache line
+
+    int pixelIndex = 0;
+    int inputA = 0, inputB = kBlockBytes;
+    int blockStart = 0;
+    int rowCountdown = kBlockDim;
+    int blockCountdown = kBlockDim;
+    final blocksPerRow = width ~/ kBlockDim;
+    int blockRowCountdown = blocksPerRow;
+
+    while (inputA < data.length) {
+      final a = data[inputA++];
+      final r = data[inputA++];
+      final g = data[inputB++];
+      final b = data[inputB++];
+
+      pixels[pixelIndex] = (a << 24) | (b << 16) | (g << 8) | r;
+
+      pixelIndex++;
+      rowCountdown--;
+      if (rowCountdown == 0) {
+        rowCountdown = kBlockDim;
+        pixelIndex = pixelIndex - kBlockDim + width;
+        blockCountdown--;
+        if (blockCountdown == 0) {
+          inputA += kBlockBytes;
+          inputB += kBlockBytes;
+          blockCountdown = kBlockDim;
+
+          pixelIndex = blockStart + kBlockDim;
+          blockRowCountdown--;
+          if (blockRowCountdown == 0) {
+            blockRowCountdown = blocksPerRow;
+            // minus 1 row because blockStart being at the end of the row places
+            // us at the first pixel of the next row
+            pixelIndex += width * (kBlockDim - 1);
+          }
+
+          blockStart = pixelIndex;
+        }
+      }
+    }
+
+    return pixels;
+  }
+}
+
 class CMPRTextureFormat extends TextureFormat {
   const CMPRTextureFormat() : super(index: 0x0E, name: "CMPR", blockSize: 8);
 
@@ -105,7 +165,7 @@ class CMPRTextureFormat extends TextureFormat {
     }
 
     void plotPixel(int x, int y, int px) {
-      pixels[y * height + x] = px;
+      pixels[y * width + x] = px;
     }
 
     void decodeDXT1Block(int dx, int dy) {

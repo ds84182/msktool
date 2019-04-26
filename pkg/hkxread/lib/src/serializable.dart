@@ -1,10 +1,8 @@
 library hkxread.src.serializable;
 
 import 'package:hkxread/src/parser.dart';
-import 'package:meta/meta.dart';
 
 abstract class Serializable {
-  @mustCallSuper
   void read(DataStream data, ObjectReader objectReader);
   // TODO: write
 }

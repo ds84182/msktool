@@ -13,7 +13,8 @@ final fishingSpawnItemClass = attrId("fishingspawnitem");
 
 final tempData = new ByteData(8);
 
-dynamic readTypeAt(AttrContext context, AttrType type, int offset, ByteData data) {
+dynamic readTypeAt(
+    AttrContext context, AttrType type, int offset, ByteData data) {
   if (type == EAReflection.float) {
     // EA.Reflection.Float
     return data.getFloat32(offset, BE);
@@ -64,14 +65,12 @@ dynamic readTypeAt(AttrContext context, AttrType type, int offset, ByteData data
     int interestId = read32BE(data, offset + 0);
     int score = read32BE(data, offset + 4);
     return new InterestScore(interestByIndex(interestId), score);
-  } else if (type == MySims.assetSpec || type == MySims.uiTexture) {
+  } else if (type == MySims.assetSpec) {
     // MySims.AssetSpec
+    return new AssetSpec(read64BE(data, offset + 0));
+  } else if (type == MySims.uiTexture) {
     // MySims.UITexture
-    // TODO: Classes for these
-    return read64BE(data, offset + 0)
-        .toRadixString(16)
-        .toUpperCase()
-        .padLeft(16, '0');
+    return new UITexture(read64BE(data, offset + 0));
   } else if (type == MySims.halString) {
     // MySims.HALString
     // TODO: Classes for these
@@ -92,13 +91,12 @@ dynamic readTypeAt(AttrContext context, AttrType type, int offset, ByteData data
     ];
   } else if (type == Attrib.floatColor) {
     // Attrib.Types.FloatColour
-    // TODO: FloatColor class
-    return [
+    return new FloatColor(
       data.getFloat32(offset + 0, BE),
       data.getFloat32(offset + 4, BE),
       data.getFloat32(offset + 8, BE),
       data.getFloat32(offset + 12, BE),
-    ];
+    );
   } else if (type == MySims.blockCost) {
     // MySims.BlockCost
     return new BlockCost(
@@ -108,10 +106,14 @@ dynamic readTypeAt(AttrContext context, AttrType type, int offset, ByteData data
     );
   }
 
+  // print("Unhandled type ${type.id.toRadixString(16)} ${type.size}");
+
   return data.buffer.asUint8List(offset, type.size);
 }
 
-dynamic _readFieldRaw(AttrContext context, AttrType type, AttrCollectionField collectionField, {bool inlined: true}) {
+dynamic _readFieldRaw(
+    AttrContext context, AttrType type, AttrCollectionField collectionField,
+    {bool inlined: true}) {
   final fieldData = collectionField.inlineData;
   final data = collectionField.data;
 
@@ -123,14 +125,22 @@ dynamic _readFieldRaw(AttrContext context, AttrType type, AttrCollectionField co
   }
 }
 
-dynamic readField(AttrContext context, AttrField field, AttrCollection collection, AttrCollectionField collectionField) {
+dynamic readField(AttrContext context, AttrField field,
+    AttrCollection collection, AttrCollectionField collectionField) {
   final fieldData = collectionField.inlineData;
   final data = collectionField.data;
 
   if (field.flags.contains(AttrFlag.fixedArray)) {
-    return new List.generate(fieldData >> 16, (i) {
-      return readTypeAt(context, field.type, (fieldData & 0xFFFF) + (i * field.type.size), data);
+    final list = new List<Object>.generate(fieldData >> 16, (i) {
+      return readTypeAt(context, field.type,
+          (fieldData & 0xFFFF) + (i * field.type.size), data);
     });
+
+    final List<Object> typedList = lookupTypeInfo(field.type.id)
+        ?.extractType(<T>() => list.cast<T>()) ??
+        list;
+
+    return typedList;
   }
 
   if (field.flags.contains(AttrFlag.array)) {
@@ -140,12 +150,15 @@ dynamic readField(AttrContext context, AttrField field, AttrCollection collectio
       return attrIdArrayIndex(field.id, i);
     });
 
-    final array = new List(size);
+    final List<Object> array = lookupTypeInfo(field.type.id)
+            ?.extractType(<T>() => new List<T>(size)) ??
+        new List<Object>(size);
 
     collection.fields.forEach((collectionField) {
       int index = fieldNames.indexOf(collectionField.id);
       if (index >= 0) {
-        array[index] = _readFieldRaw(context, field.type, collectionField, inlined: false);
+        array[index] =
+            _readFieldRaw(context, field.type, collectionField, inlined: false);
       }
     });
 

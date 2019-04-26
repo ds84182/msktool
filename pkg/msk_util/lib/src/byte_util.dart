@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:file/file.dart';
 
-const BE = Endianness.BIG_ENDIAN;
-const LE = Endianness.LITTLE_ENDIAN;
+const BE = Endian.big;
+const LE = Endian.little;
 
 int read16BE(ByteData data, int offset) {
   return data.getUint16(offset, BE);

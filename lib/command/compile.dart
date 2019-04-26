@@ -3,7 +3,6 @@ library msktool.command.compile;
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
-import 'package:args/command_runner.dart';
 import 'package:msktool/command/base.dart';
 import 'package:path/path.dart' as p;
 

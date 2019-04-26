@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:file/file.dart';
 import 'package:msk_pf/src/defs.dart';
+import 'package:msk_pf/src/id.dart';
 import 'package:msk_util/msk_util.dart';
 
 class PFHeader extends ByteSerializable {
@@ -113,7 +114,7 @@ class PFEntry extends ByteSerializable {
   int size;
 
   String get name {
-    return kFileDefs[id] ?? id.toRadixString(16).toUpperCase().padLeft(16, '0');
+    return kFileDefs[id] ?? formatId(id);
   }
 
   int get serializeSize => 8 + 4 + 4;
@@ -218,10 +219,9 @@ Future<PFHeader> readPF(RandomAccessFile file) async {
 
   header.packageHeaders = [];
 
-  await Future.forEach<PFPackageHeader>(
-    new Iterable.generate(header.count),
-    (_) async => header.packageHeaders.add(await readPackage()),
-  );
+  for (int i=0; i<header.count; i++) {
+    header.packageHeaders.add(await readPackage());
+  }
 
   header.packages =
       header.packageHeaders.map((ph) => ph.package).toList(growable: false);
