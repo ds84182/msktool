@@ -18,6 +18,12 @@ Bounding box (Min XYZ, Max XYZ): f32[6]
 Unknown: u32
 Unknown: u32 (Always 0?)
 Unknown: u32 (Always 2CA33BDB? "none" when passed through FNV-1)
+Unknown (padding?): u32 * 3
+Pointer to Bone to Matrix binding info
+Pointer to Bone names
+Pointer to Bone info
+
+If there is bone info, GX_VA_POSMATIDX is enabled with 8-bit index
 
 Vertex data header:
 Vertex attribute data entries...
@@ -27,6 +33,24 @@ Vertex attribute array type: u8 (GX_VA_POS and friends)
 Vertex attribute type: u8 ($ & 0b111 is component size, $ >> 3 is component type)
 Padding? always zero: u16
 Pointer to attribute data: u32
+
+Bone to Matrix binding info:
+Pointer to start of Bone to Matrix bindings
+Pointer to identity 3x4 matrix for each binding
+Number of matrix bindings: u32
+
+Bone to Matrix Binding:
+Weights: f32[4]
+Bone index: u8[4] (FF == no bone)
+
+Bone names:
+Number of bones: u32
+For each bone, the bone name (probably FNV-1 32-bit): u32
+
+Bone info:
+Number of bones: u32
+Pointer to bone names: &[u32; num_bones]
+Pointer to bone transform matrix data: &[[f32; 4 * 4]; num_bones]
 
 Matrix info:
 Pointer to matrix header
