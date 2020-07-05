@@ -11,7 +11,7 @@ abstract class DataStream {
   DataStream();
 
   factory DataStream.fromTypedData(TypedData data) =>
-      new ByteDataStreamImpl(data.buffer.asByteData());
+      new ByteDataStreamImpl(data.buffer.asByteData(data.offsetInBytes, data.lengthInBytes));
 
   int get offset;
   int get size;
