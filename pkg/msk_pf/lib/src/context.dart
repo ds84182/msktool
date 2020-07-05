@@ -12,8 +12,7 @@ class PFContext {
   final Directory dir;
   PFHeader header;
 
-  PFContext(Directory dir)
-      : dir = dir;
+  PFContext(Directory dir) : dir = dir;
 
   String forceRelative(String path) =>
       p.isAbsolute(path) ? p.relative(path, from: p.rootPrefix(path)) : path;
@@ -114,10 +113,12 @@ class PFContext {
     header.packageHeaders.forEach((ph) {
       Map<PFType, List<PFEntry>> typeEntryGroups = {};
       for (final type in ph.package.types) {
-        typeEntryGroups[type] = ph.package.entries.where((entry) => entry.type == type).toList();
+        typeEntryGroups[type] =
+            ph.package.entries.where((entry) => entry.type == type).toList();
       }
 
-      ph.package.entries = ph.package.types.expand((type) => typeEntryGroups[type]).toList();
+      ph.package.entries =
+          ph.package.types.expand((type) => typeEntryGroups[type]).toList();
     });
   }
 
@@ -153,8 +154,13 @@ class PFContext {
     int intId;
 
     if (id is String) {
-      if (id.length == 16 && id.toUpperCase().codeUnits.every((cu) => (cu >= $0 && cu <= $9) || (cu >= $A && cu <= $F))) {
-        intId = int.parse(id, radix: 16);
+      final upper = id.toUpperCase();
+      if (id.length == 16 &&
+          upper.codeUnits.every(
+              (cu) => (cu >= $0 && cu <= $9) || (cu >= $A && cu <= $F))) {
+        intId = upper.codeUnits
+            .map((cu) => cu >= $A ? (cu - $A) + 0xA : (cu - $0))
+            .fold(0, (p, e) => (p << 4) | e);
       } else {
         intId = computeId(id.codeUnits);
       }

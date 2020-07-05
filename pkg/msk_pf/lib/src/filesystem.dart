@@ -2,6 +2,7 @@ library msk.pf.src.filesystem;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:file/file.dart';
 import 'package:file/src/common.dart';
 import 'package:path/path.dart' as p;
@@ -408,13 +409,13 @@ class PFFSFile extends PFFSEntity<PFFSFile> implements File {
   }
 
   @override
-  Future<List<int>> readAsBytes() {
+  Future<Uint8List> readAsBytes() {
     // TODO: implement readAsBytes
     throw UnimplementedError();
   }
 
   @override
-  List<int> readAsBytesSync() {
+  Uint8List readAsBytesSync() {
     // TODO: implement readAsBytesSync
     throw UnimplementedError();
   }
